@@ -1,0 +1,1 @@
+- Todo o código da camada mais interna possível (núcleo da aplicação)
