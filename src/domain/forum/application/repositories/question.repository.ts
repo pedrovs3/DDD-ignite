@@ -4,4 +4,6 @@ import { Question } from '@/domain/forum/enterprise/entities/question';
 export interface QuestionsRepository {
   create: (question: Question) => Promise<void>;
   findBySlug: (slug: Slug | string) => Promise<Question | null>;
+  findById: (id: Slug | string) => Promise<Question | null>;
+  delete: (question: Question) => Promise<void>;
 }
