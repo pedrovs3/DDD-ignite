@@ -1,7 +1,7 @@
 export class Slug {
   public value: string;
 
-  constructor(value: string) {
+  private constructor(value: string) {
     this.value = value;
   }
 
@@ -26,5 +26,9 @@ export class Slug {
       .replace(/-$/g, '');
 
     return new Slug(slugText);
+  }
+
+  static create(slug: string) {
+    return new Slug(slug);
   }
 }

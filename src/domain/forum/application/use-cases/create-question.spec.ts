@@ -15,7 +15,7 @@ describe('Create question', () => {
     const { question } = await sut.execute({
       authorId: '123',
       title: 'Nova pergunta',
-      content: 'Nova resposta',
+      content: 'Uma pergunta qualquer',
     });
 
     expect(question.id).toBeTruthy();
