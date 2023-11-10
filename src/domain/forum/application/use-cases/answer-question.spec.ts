@@ -1,6 +1,6 @@
-import { Answer } from '@entities/answer';
+import { Answer } from '@domain/forum/enterprise/entities/answer';
+import { AnswerRepository } from '@domain/forum/application/repositories/answer.repository';
 import { AnswerQuestionUseCase } from './answer-question';
-import { AnswerRepository } from '../repositories/answer.repository';
 
 const fakeAnswerRepository: AnswerRepository = {
   // TODO: remove line after implementing the method

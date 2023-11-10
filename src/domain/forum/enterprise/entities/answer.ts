@@ -1,5 +1,5 @@
 import { Entity } from '@/core/entities/entity';
-import { UniqueEntityId } from './value-objects/unique-entity-id';
+import { UniqueEntityId } from '@/core/entities/unique-entity-id';
 import { Optional } from '@/core/types/optional';
 
 interface AnswerProps {
