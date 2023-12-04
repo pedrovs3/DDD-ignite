@@ -4,7 +4,6 @@ import { Answer } from '@domain/forum/enterprise/entities/answer';
 interface EditAnswerUseCaseRequest {
   authorId: string;
   questionId: string;
-  title: string;
   content: string;
 }
 

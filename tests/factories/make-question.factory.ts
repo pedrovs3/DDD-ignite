@@ -6,7 +6,7 @@ export const makeQuestion = (
   override: Partial<QuestionProps> = {},
   id?: UniqueEntityId,
 ) => Question.create({
-  authorId: '123',
+  authorId: new UniqueEntityId('123'),
   title: faker.lorem.sentence(),
   content: faker.lorem.text(),
   ...override,

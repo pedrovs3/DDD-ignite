@@ -21,10 +21,10 @@ export class InMemoryAnswerRepository implements AnswerRepository {
     return answer;
   }
 
-  async update(answer: Answer): Promise<Answer> {
+  async update(answer: Answer): Promise<Answer | null> {
     const itemIndex = this.items.findIndex((item) => item.id === answer.id);
 
-    if (itemIndex === -1) throw new Error('Answer not found');
+    if (itemIndex === -1) return null;
 
     this.items[itemIndex] = answer;
 
