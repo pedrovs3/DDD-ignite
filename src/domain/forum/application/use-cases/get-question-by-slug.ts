@@ -17,7 +17,7 @@ export class GetQuestionBySlugUseCase {
   async execute({
     slug,
   }: GetQuestionBySlugUseCaseRequest): Promise<GetQuestionBySlugUseCaseResponse> {
-    const question = await this.questionsRepository.findBySlug(slug);
+    const question = await this.questionsRepository.findBySlug(slug.toString());
 
     if (!question) {
       throw new Error('Question not found');
