@@ -32,9 +32,12 @@ export class InMemoryAnswerRepository implements AnswerRepository {
     return answer;
   }
 
-  async findManyRecent({ page, limit = 20 }: PaginationParams): Promise<Answer[]> {
+  async findManyByQuestionId({ page, questionId, limit = 20 }: PaginationParams & {
+    questionId: string
+  }): Promise<Answer[]> {
     const offset = (page - 1) * limit;
     const answers = this.items
+      .filter((item) => item.questionId.toString() === questionId)
       .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
       .slice(offset, offset + limit);
 
