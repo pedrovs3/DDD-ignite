@@ -70,13 +70,11 @@ export class Question extends Entity<QuestionProps> {
   }
 
   static create(props: Optional<QuestionProps, 'createdAt' | 'slug'>, id?: UniqueEntityId): Question {
-    const question = new Question({
+    return new Question({
       ...props,
       slug: props.slug ?? Slug.createFromText(props.title),
-      createdAt: new Date(),
+      createdAt: props.createdAt ?? new Date(),
     }, id);
-
-    return question;
   }
 
   private touch(): void {

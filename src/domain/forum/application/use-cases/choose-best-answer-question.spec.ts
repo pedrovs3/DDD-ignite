@@ -18,23 +18,27 @@ describe('Choose best answer for a question', () => {
   });
 
   it('should be able to choose the best answer for a question', async () => {
-    const question = makeQuestion({ authorId: new UniqueEntityId('author-1') }, new UniqueEntityId('question-1'));
+    const question = makeQuestion({ authorId: new UniqueEntityId('author-1') });
     const answer = makeAnswer({ questionId: question.id }, new UniqueEntityId('answer-1'));
 
-    expect(inMemoryQuestionsRepository.items.find((value) => value.id === new UniqueEntityId('123')))
-      .toBe(undefined);
-    expect(inMemoryQuestionsRepository.items).toHaveLength(0);
+    await inMemoryQuestionsRepository.create(question);
+    await inMemoryAnswerRepository.create(answer);
+
+    await sut.execute({
+      answerId: answer.id.toString(),
+      authorId: question.authorId.toString(),
+    });
+
+    expect(inMemoryQuestionsRepository.items[0].bestAnswerId).toEqual(answer.id);
   });
 
-  it('should not be able to delete a register from another user', async () => {
-    const newQuestion = makeQuestion({ authorId: new UniqueEntityId('author-1') }, new UniqueEntityId('question-1'));
-    await inMemoryQuestionsRepository.create(newQuestion);
+  it('should not be able to choose another user question best answer', async () => {
+    const question = makeQuestion();
+    const answer = makeAnswer({ questionId: question.id }, new UniqueEntityId('answer-1'));
 
     await expect(() => sut.execute({
-      questionId: 'question-1',
-      authorId: 'author-2',
+      answerId: answer.id.toString(),
+      authorId: 'another-user-id',
     })).rejects.toBeInstanceOf(Error);
-
-    expect(inMemoryQuestionsRepository.items).toHaveLength(1);
   });
 });
