@@ -38,6 +38,9 @@
       ],
       "@domain/*": [
         "./src/domain/*"
+      ],
+      "@tests/*": [
+        "./tests/*"
       ]
     },
     "allowSyntheticDefaultImports": true,

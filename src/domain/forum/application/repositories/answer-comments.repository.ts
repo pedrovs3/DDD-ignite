@@ -1,4 +1,5 @@
 import { AnswerComment } from '@domain/forum/enterprise/entities';
+import { PaginationParams } from '@/core/repositories';
 
 export interface AnswerCommentsRepository {
   create(answerComment: AnswerComment): Promise<void>
@@ -7,7 +8,7 @@ export interface AnswerCommentsRepository {
 
   findById(id: string): Promise<AnswerComment | null>
 
-  findAllByAnswerId(answerId: string): Promise<AnswerComment[]>
+  findAllByAnswerId(answerId: string, params: PaginationParams): Promise<AnswerComment[]>
 
   update(answerComment: AnswerComment): Promise<void>
 }

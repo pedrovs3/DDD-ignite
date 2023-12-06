@@ -1,4 +1,7 @@
 import { AnswerCommentsRepository } from '@domain/forum/application/repositories';
+import { ResourceNotFoundError } from '@domain/forum/application/use-cases/errors/resource-not-found.error';
+import { Unauthorized } from '@domain/forum/application/use-cases/errors/unauthorized';
+import { Either, left, right } from '@/core/either';
 
 interface DeleteCommentForAnswerUseCaseRequest {
   answerId: string,
@@ -6,8 +9,7 @@ interface DeleteCommentForAnswerUseCaseRequest {
   authorId: string,
 }
 
-interface DeleteCommentForAnswerUseCaseResponse {
-}
+type DeleteCommentForAnswerUseCaseResponse = Either<ResourceNotFoundError | Unauthorized, {}>;
 
 export class DeleteCommentForAnswerUseCase {
   constructor(
@@ -21,12 +23,12 @@ export class DeleteCommentForAnswerUseCase {
     authorId,
   }: DeleteCommentForAnswerUseCaseRequest): Promise<DeleteCommentForAnswerUseCaseResponse> {
     const comment = await this.answerCommentsRepository.findById(commentId);
-    if (!comment) throw new Error('Comment not found');
-    if (comment.authorId.toString() !== authorId) throw new Error('Unauthorized');
+    if (!comment) return left(new ResourceNotFoundError());
+    if (comment.authorId.toString() !== authorId) return left(new Unauthorized());
 
-    if (comment.answerId.toString() !== answerId) throw new Error('Comment not found for this Answer');
+    if (comment.answerId.toString() !== answerId) return left(new ResourceNotFoundError());
     await this.answerCommentsRepository.delete(comment);
 
-    return {};
+    return right({});
   }
 }

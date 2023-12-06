@@ -1,5 +1,7 @@
 import { Answer } from '@domain/forum/enterprise/entities';
 import { AnswerRepository } from '@domain/forum/application/repositories';
+import { ResourceNotFoundError } from '@domain/forum/application/use-cases/errors/resource-not-found.error';
+import { Either, left, right } from '@/core/either';
 
 interface FetchQuestionAnswersUseCaseRequest {
   page: number
@@ -7,9 +9,9 @@ interface FetchQuestionAnswersUseCaseRequest {
   questionId: string
 }
 
-interface FetchQuestionAnswersUseCaseResponse {
+type FetchQuestionAnswersUseCaseResponse = Either<ResourceNotFoundError, {
   answers: Answer[]
-}
+}>;
 
 export class FetchQuestionAnswersUseCase {
   constructor(private answerRepository: AnswerRepository) {
@@ -19,11 +21,8 @@ export class FetchQuestionAnswersUseCase {
     : Promise<FetchQuestionAnswersUseCaseResponse> {
     const answers = await this.answerRepository.findManyByQuestionId({ page, questionId, limit });
 
-    if (!answers) {
-      throw new Error('Questions not found');
-    }
-    return {
-      answers,
-    };
+    if (!answers) return left(new ResourceNotFoundError({ fieldName: 'answers' }));
+
+    return right({ answers });
   }
 }

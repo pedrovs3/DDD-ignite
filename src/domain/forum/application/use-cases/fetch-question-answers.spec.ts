@@ -1,7 +1,8 @@
-import {InMemoryAnswerRepository} from "../../../../../tests/repositories/in-memory-answer-repository";
-import {makeAnswer} from "../../../../../tests/factories/make-answer.factory";
+import {InMemoryAnswerRepository} from "@tests/repositories/in-memory-answer-repository";
+import {makeAnswer} from "@tests/factories/make-answer.factory";
 import {UniqueEntityId} from "@/core/entities";
 import {FetchQuestionAnswersUseCase} from "@domain/forum/application/use-cases/fetch-question-answers";
+import {expect} from "vitest";
 
 let inMemoryAnswerRepository: InMemoryAnswerRepository;
 let sut: FetchQuestionAnswersUseCase;
@@ -26,14 +27,18 @@ describe('Fetch question answers', () => {
       questionId: new UniqueEntityId('2')
     }));
 
-    const {answers} = await sut.execute({page: 1, limit: 10, questionId: '1'});
+    const result = await sut.execute({page: 1, limit: 10, questionId: '1'});
 
-    expect(answers.length).toBe(2);
-    expect(answers[0].createdAt.getUTCDate()).toBeGreaterThanOrEqual(answers[1].createdAt.getUTCDate());
-    expect(answers).toEqual([
-      expect.objectContaining({questionId: new UniqueEntityId('1'), createdAt: new Date('2021-01-02')}),
-      expect.objectContaining({questionId: new UniqueEntityId('1'), createdAt: new Date('2021-01-01')}),
-    ]);
+    expect(result.isRight).toBeTruthy();
+    expect(result.value).toHaveProperty('answers');
+    if (result.isRight()) {
+      expect(result.value.answers.length).toBe(2);
+      expect(result.value.answers[0].createdAt.getUTCDate()).toBeGreaterThanOrEqual(result.value.answers[1].createdAt.getUTCDate());
+      expect(result.value.answers).toEqual([
+        expect.objectContaining({questionId: new UniqueEntityId('1'), createdAt: new Date('2021-01-02')}),
+        expect.objectContaining({questionId: new UniqueEntityId('1'), createdAt: new Date('2021-01-01')}),
+      ]);
+    }
   });
 
   it('should be able to fetch paginated question answers', async () => {
@@ -41,9 +46,12 @@ describe('Fetch question answers', () => {
       await inMemoryAnswerRepository.create(makeAnswer({questionId: new UniqueEntityId('1')}));
     }
 
-    const {answers} = await sut.execute({page: 2, limit: 10, questionId: '1'});
+    const result = await sut.execute({page: 2, limit: 10, questionId: '1'});
 
-    expect(answers.length).toBe(5);
-    expect(answers[0].createdAt.getUTCDate()).toBeGreaterThanOrEqual(answers[1].createdAt.getUTCDate());
+    expect(result.isRight()).toBeTruthy();
+    if (result.isRight()) {
+      expect(result.value.answers.length).toBe(5);
+      expect(result.value.answers[0].createdAt.getUTCDate()).toBeGreaterThanOrEqual(result.value.answers[1].createdAt.getUTCDate());
+    }
   });
 });

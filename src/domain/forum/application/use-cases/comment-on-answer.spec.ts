@@ -1,10 +1,8 @@
 import {beforeEach, describe, expect} from 'vitest';
-import {
-  InMemoryAnswersCommentsRepository
-} from "../../../../../tests/repositories/in-memory-answers-comments-repository";
+import {InMemoryAnswersCommentsRepository} from "@tests/repositories/in-memory-answers-comments-repository";
 import {CommentOnAnswerUseCase} from "@domain/forum/application/use-cases/comment-on-answer";
-import {makeAnswer} from "../../../../../tests/factories/make-answer.factory";
-import {InMemoryAnswerRepository} from "../../../../../tests/repositories/in-memory-answer-repository";
+import {makeAnswer} from "@tests/factories/make-answer.factory";
+import {InMemoryAnswerRepository} from "@tests/repositories/in-memory-answer-repository";
 
 let inMemoryAnswersCommentsRepository: InMemoryAnswersCommentsRepository;
 let inMemoryAnswersRepository: InMemoryAnswerRepository;
@@ -23,12 +21,14 @@ describe('Comment on Answer', () => {
     await inMemoryAnswersRepository.create(Answer);
 
 
-    await sut.execute({
+    const result = await sut.execute({
       authorId: 'authorId',
       answerId: Answer.id.toString(),
       content: 'Comentário sobre a resposta.',
     });
 
+    expect(result.isRight()).toBe(true);
+    expect(result.value).toHaveProperty('answerComment');
     expect(inMemoryAnswersCommentsRepository.items[0].content).toEqual('Comentário sobre a resposta.');
   });
 });

@@ -1,5 +1,7 @@
 import { QuestionsCommentsRepository } from '@domain/forum/application/repositories';
 import { QuestionComment } from '@domain/forum/enterprise/entities';
+import { ResourceNotFoundError } from '@domain/forum/application/use-cases/errors/resource-not-found.error';
+import { Either, left, right } from '@/core/either';
 
 interface ListQuestionCommentsUseCaseRequest {
   questionId: string;
@@ -7,9 +9,9 @@ interface ListQuestionCommentsUseCaseRequest {
   limit?: number;
 }
 
-interface ListQuestionCommentsUseCaseResponse {
+type ListQuestionCommentsUseCaseResponse = Either<ResourceNotFoundError, {
   questionComments: QuestionComment[]
-}
+}>;
 
 export class ListQuestionCommentsUseCase {
   constructor(private questionCommentsRepository: QuestionsCommentsRepository) {
@@ -25,8 +27,10 @@ export class ListQuestionCommentsUseCase {
       limit,
     });
 
-    return {
+    if (!questionComments) return left(new ResourceNotFoundError({ fieldName: 'questionComments' }));
+
+    return right({
       questionComments,
-    };
+    });
   }
 }

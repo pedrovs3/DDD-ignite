@@ -1,5 +1,8 @@
 import { AnswerRepository } from '@domain/forum/application/repositories/answer.repository';
 import { Answer } from '@domain/forum/enterprise/entities/answer';
+import { ResourceNotFoundError } from '@domain/forum/application/use-cases/errors/resource-not-found.error';
+import { Unauthorized } from '@domain/forum/application/use-cases/errors/unauthorized';
+import { Either, left, right } from '@/core/either';
 
 interface EditAnswerUseCaseRequest {
   authorId: string;
@@ -7,9 +10,9 @@ interface EditAnswerUseCaseRequest {
   content: string;
 }
 
-interface EditAnswerUseCaseResponse {
+type EditAnswerUseCaseResponse = Either<ResourceNotFoundError | Unauthorized, {
   answer: Answer;
-}
+}>;
 
 export class EditAnswerUseCase {
   constructor(private answerRepository: AnswerRepository) {
@@ -22,13 +25,13 @@ export class EditAnswerUseCase {
   }: EditAnswerUseCaseRequest): Promise<EditAnswerUseCaseResponse> {
     const answer = await this.answerRepository.findById(questionId);
 
-    if (!answer) throw new Error('Answer not found');
-    if (answer.authorId.toString() !== authorId) throw new Error('Unauthorized');
+    if (!answer) return left(new ResourceNotFoundError({ fieldName: 'answer' }));
+    if (answer.authorId.toString() !== authorId) return left(new Unauthorized());
 
     answer.content = content;
 
     await this.answerRepository.update(answer);
 
-    return { answer };
+    return right({ answer });
   }
 }

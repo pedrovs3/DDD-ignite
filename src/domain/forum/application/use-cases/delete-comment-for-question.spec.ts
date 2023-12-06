@@ -1,9 +1,7 @@
 import {expect} from 'vitest';
 import {UniqueEntityId} from '@/core/entities/unique-entity-id';
-import {
-  InMemoryQuestionsCommentsRepository
-} from "../../../../../tests/repositories/in-memory-questions-comments-repository";
-import {makeComment} from "../../../../../tests/factories/make-comment.factory";
+import {InMemoryQuestionsCommentsRepository} from "@tests/repositories/in-memory-questions-comments-repository";
+import {makeComment} from "@tests/factories/make-comment.factory";
 import {QuestionComment} from "@domain/forum/enterprise/entities";
 import {DeleteCommentForQuestionUseCase} from "@domain/forum/application/use-cases/delete-comment-for-question";
 
@@ -23,12 +21,13 @@ describe('Delete comment for question', () => {
     }, 'question', new UniqueEntityId('comment-1'));
     await inMemoryQuestionsCommentsRepository.create(newComment as QuestionComment);
 
-    await sut.execute({
+    const result = await sut.execute({
       questionId: 'question-1',
       authorId: 'author-2',
       commentId: 'comment-1',
     });
 
+    expect(result.isRight()).toBeTruthy();
     expect(inMemoryQuestionsCommentsRepository.items.find((value) => value.id === new UniqueEntityId('comment-1')))
       .toBe(undefined);
     expect(inMemoryQuestionsCommentsRepository.items).toHaveLength(0);
@@ -37,13 +36,14 @@ describe('Delete comment for question', () => {
   it('should not be able to delete a register from another user', async () => {
     const newComment = makeComment({authorId: new UniqueEntityId('author-2')}, 'question', new UniqueEntityId('comment-1'));
     await inMemoryQuestionsCommentsRepository.create(newComment as QuestionComment);
-
-    await expect(() => sut.execute({
+    const result = await sut.execute({
       questionId: 'question-1',
       authorId: 'author-1',
       commentId: 'comment-1',
-    })).rejects.toBeInstanceOf(Error);
+    })
 
+    expect(result.isRight()).toBe(false);
+    expect(result.isLeft()).toBe(true);
     expect(inMemoryQuestionsCommentsRepository.items).toHaveLength(1);
   });
 });

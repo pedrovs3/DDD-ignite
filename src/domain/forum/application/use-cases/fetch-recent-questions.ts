@@ -1,14 +1,16 @@
 import { Question } from '@domain/forum/enterprise/entities';
 import { QuestionsRepository } from '@domain/forum/application/repositories';
+import { ResourceNotFoundError } from '@domain/forum/application/use-cases/errors/resource-not-found.error';
+import { Either, left, right } from '@/core/either';
 
 interface FetchRecentQuestionsUseCaseRequest {
   page: number
   limit?: number
 }
 
-interface FetchRecentQuestionsUseCaseResponse {
+type FetchRecentQuestionsUseCaseResponse = Either<ResourceNotFoundError, {
   questions: Question[]
-}
+}>;
 
 export class FetchRecentQuestionsUseCase {
   constructor(private questionsRepository: QuestionsRepository) {
@@ -18,11 +20,10 @@ export class FetchRecentQuestionsUseCase {
     : Promise<FetchRecentQuestionsUseCaseResponse> {
     const questions = await this.questionsRepository.findManyRecent({ page, limit });
 
-    if (!questions) {
-      throw new Error('Questions not found');
-    }
-    return {
+    if (!questions) return left(new ResourceNotFoundError({ fieldName: 'questions' }));
+
+    return right({
       questions,
-    };
+    });
   }
 }

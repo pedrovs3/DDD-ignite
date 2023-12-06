@@ -17,15 +17,18 @@ describe('Fetch recent questions', () => {
     await inMemoryQuestionsRepository.create(makeQuestion({createdAt: new Date('2021-01-25')}));
     await inMemoryQuestionsRepository.create(makeQuestion({createdAt: new Date('2021-01-03')}));
 
-    const {questions} = await sut.execute({page: 1});
+    const result = await sut.execute({page: 1});
 
-    expect(questions.length).toBe(3);
-    expect(questions[0].createdAt.getUTCDate()).toBeGreaterThanOrEqual(questions[1].createdAt.getUTCDate());
-    expect(questions).toEqual([
-      expect.objectContaining({createdAt: new Date('2021-01-25')}),
-      expect.objectContaining({createdAt: new Date('2021-01-03')}),
-      expect.objectContaining({createdAt: new Date('2021-01-01')}),
-    ]);
+    expect(result.isRight()).toBeTruthy();
+    if (result.isRight()) {
+      expect(result.value.questions.length).toBe(3);
+      expect(result.value.questions[0].createdAt.getUTCDate()).toBeGreaterThanOrEqual(result.value.questions[1].createdAt.getUTCDate());
+      expect(result.value.questions).toEqual([
+        expect.objectContaining({createdAt: new Date('2021-01-25')}),
+        expect.objectContaining({createdAt: new Date('2021-01-03')}),
+        expect.objectContaining({createdAt: new Date('2021-01-01')}),
+      ]);
+    }
   });
 
   it('should be able to fetch paginated recent questions', async () => {
@@ -33,8 +36,12 @@ describe('Fetch recent questions', () => {
       await inMemoryQuestionsRepository.create(makeQuestion());
     }
 
-    const {questions} = await sut.execute({page: 2, limit: 20});
+    const result = await sut.execute({page: 2, limit: 20});
 
-    expect(questions).toHaveLength(2);
+    expect(result.isRight()).toBeTruthy();
+    if (result.isRight()) {
+      expect(result.value.questions).toHaveLength(2);
+      expect(result.value.questions[0].createdAt.getUTCDate()).toBeGreaterThanOrEqual(result.value.questions[1].createdAt.getUTCDate());
+    }
   });
 });
