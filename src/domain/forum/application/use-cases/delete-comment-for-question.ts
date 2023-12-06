@@ -1,4 +1,4 @@
-import { QuestionsCommentsRepository, QuestionsRepository } from '@domain/forum/application/repositories';
+import { QuestionsCommentsRepository } from '@domain/forum/application/repositories';
 
 interface DeleteCommentForQuestionUseCaseRequest {
   questionId: string,
@@ -11,7 +11,6 @@ interface DeleteCommentForQuestionUseCaseResponse {
 
 export class DeleteCommentForQuestionUseCase {
   constructor(
-    private questionsRepository: QuestionsRepository,
     private questionCommentsRepository: QuestionsCommentsRepository,
   ) {
   }

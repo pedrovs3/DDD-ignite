@@ -1,10 +1,14 @@
 import { faker } from '@faker-js/faker';
-import { AnswerProps } from '@domain/forum/enterprise/entities/answer';
-import { AnswerComment, QuestionComment } from '@domain/forum/enterprise/entities';
+import {
+  AnswerComment,
+  AnswerCommentProps,
+  QuestionComment,
+  QuestionCommentProps,
+} from '@domain/forum/enterprise/entities';
 import { UniqueEntityId } from '@/core/entities/unique-entity-id';
 
 export const makeComment = (
-  override: Partial<AnswerProps> = {},
+  override: Partial<AnswerCommentProps | QuestionCommentProps> = {},
   type: 'question' | 'answer' = 'question',
   id?: UniqueEntityId,
 ) => {
