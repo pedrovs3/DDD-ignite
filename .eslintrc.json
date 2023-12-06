@@ -38,6 +38,7 @@
     "import/extensions": "off",
     "import/no-extraneous-dependencies": "off",
     "class-methods-use-this": "off",
-    "no-underscore-dangle": "off"
+    "no-underscore-dangle": "off",
+    "@typescript-eslint/no-shadow": "off"
   }
 }
