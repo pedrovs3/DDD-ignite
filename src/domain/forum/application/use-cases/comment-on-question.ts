@@ -14,8 +14,8 @@ interface CommentOnQuestionUseCaseResponse {
 
 export class CommentOnQuestionUseCase {
   constructor(
-    private questionCommentRepository: QuestionsCommentsRepository,
     private questionsRepository: QuestionsRepository,
+    private questionCommentRepository: QuestionsCommentsRepository,
   ) {
   }
 

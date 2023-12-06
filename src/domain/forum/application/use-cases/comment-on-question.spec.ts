@@ -3,24 +3,32 @@ import {
   InMemoryQuestionsCommentsRepository
 } from "../../../../../tests/repositories/in-memory-questions-comments-repository";
 import {CommentOnQuestionUseCase} from "@domain/forum/application/use-cases/comment-on-question";
+import {InMemoryQuestionsRepository} from "../../../../../tests/repositories/in-memory-questions-repository";
+import {makeQuestion} from "../../../../../tests/factories/make-question.factory";
 
 let inMemoryQuestionsCommentsRepository: InMemoryQuestionsCommentsRepository;
+let inMemoryQuestionsRepository: InMemoryQuestionsRepository;
 let sut: CommentOnQuestionUseCase;
 
 describe('Comment on question', () => {
   beforeEach(() => {
     inMemoryQuestionsCommentsRepository = new InMemoryQuestionsCommentsRepository();
-    sut = new CommentOnQuestionUseCase(inMemoryQuestionsCommentsRepository,);
+    inMemoryQuestionsRepository = new InMemoryQuestionsRepository();
+    sut = new CommentOnQuestionUseCase(inMemoryQuestionsRepository, inMemoryQuestionsCommentsRepository);
   });
 
-  it('should be able to create a question', async () => {
-    const {question} = await sut.execute({
-      authorId: '123',
-      title: 'Nova pergunta',
-      content: 'Uma pergunta qualquer',
+  it('should be able to comment on question', async () => {
+    const question = makeQuestion();
+
+    await inMemoryQuestionsRepository.create(question);
+
+
+    await sut.execute({
+      authorId: 'authorId',
+      questionId: question.id.toString(),
+      content: 'Comentário sobre a pergunta',
     });
 
-    expect(question.id).toBeTruthy();
-    expect(inMemoryQuestionsRepository.items[0].id).toEqual(question.id);
+    expect(inMemoryQuestionsCommentsRepository.items[0].content).toEqual('Comentário sobre a pergunta');
   });
 });
