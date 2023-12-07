@@ -1,9 +1,13 @@
 import { Answer } from '@domain/forum/enterprise/entities/answer';
 import { AnswerRepository } from '@domain/forum/application/repositories/answer.repository';
+import { AnswerAttachmentsRepository } from '@domain/forum/application/repositories/answer-attachments.repository';
 import { PaginationParams } from '@/core/repositories';
 
 export class InMemoryAnswerRepository implements AnswerRepository {
   public items: Answer[] = [];
+
+  constructor(private answerAttachmentsRepository: AnswerAttachmentsRepository) {
+  }
 
   async create(answer: Answer) {
     this.items.push(answer);
@@ -11,7 +15,9 @@ export class InMemoryAnswerRepository implements AnswerRepository {
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   delete(answer: Answer): Promise<void> {
-    throw new Error('Method not implemented.');
+    this.items = this.items.filter((item) => item.id !== answer.id);
+
+    return this.answerAttachmentsRepository.deleteManyByAnswerId(answer.id.toString());
   }
 
   async findById(id: string): Promise<Answer | null> {

@@ -3,13 +3,16 @@ import {makeAnswer} from "@tests/factories/make-answer.factory";
 import {UniqueEntityId} from "@/core/entities";
 import {FetchQuestionAnswersUseCase} from "@domain/forum/application/use-cases/fetch-question-answers";
 import {expect} from "vitest";
+import {InMemoryAnswersAttachmentsRepository} from "@tests/repositories/in-memory-answers-attachments-repository";
 
 let inMemoryAnswerRepository: InMemoryAnswerRepository;
+let inMemoryAnswersAttachmentsRepository: InMemoryAnswersAttachmentsRepository;
 let sut: FetchQuestionAnswersUseCase;
 
 describe('Fetch question answers', () => {
   beforeEach(() => {
-    inMemoryAnswerRepository = new InMemoryAnswerRepository();
+    inMemoryAnswersAttachmentsRepository = new InMemoryAnswersAttachmentsRepository()
+    inMemoryAnswerRepository = new InMemoryAnswerRepository(inMemoryAnswersAttachmentsRepository);
     sut = new FetchQuestionAnswersUseCase(inMemoryAnswerRepository);
   });
 

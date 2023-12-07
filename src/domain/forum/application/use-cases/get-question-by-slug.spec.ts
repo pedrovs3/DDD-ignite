@@ -3,13 +3,16 @@ import {GetQuestionBySlugUseCase} from '@domain/forum/application/use-cases/get-
 import {Slug} from '@domain/forum/enterprise/entities/value-objects/slug';
 import {makeQuestion} from 'tests/factories/make-question.factory';
 import {expect} from "vitest";
+import {InMemoryQuestionsAttachmentsRepository} from "@tests/repositories/in-memory-questions-attachments-repository";
 
+let inMemoryQuestionsAttachmentsRepository: InMemoryQuestionsAttachmentsRepository;
 let inMemoryQuestionsRepository: InMemoryQuestionsRepository;
 let sut: GetQuestionBySlugUseCase;
 
 describe('Get question by slug', () => {
   beforeEach(() => {
-    inMemoryQuestionsRepository = new InMemoryQuestionsRepository();
+    inMemoryQuestionsAttachmentsRepository = new InMemoryQuestionsAttachmentsRepository()
+    inMemoryQuestionsRepository = new InMemoryQuestionsRepository(inMemoryQuestionsAttachmentsRepository);
     sut = new GetQuestionBySlugUseCase(inMemoryQuestionsRepository);
   });
 

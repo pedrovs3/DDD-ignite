@@ -5,14 +5,18 @@ import {UniqueEntityId} from '@/core/entities/unique-entity-id';
 import {makeAnswer} from '@tests/factories/make-answer.factory';
 import {Unauthorized} from "@domain/forum/application/use-cases/errors/unauthorized";
 import {ResourceNotFoundError} from "@domain/forum/application/use-cases/errors/resource-not-found.error";
+import {InMemoryAnswersAttachmentsRepository} from "@tests/repositories/in-memory-answers-attachments-repository";
+import {makeAnswerAttachment} from "@tests/factories/make-answer-attachment";
 
 let inMemoryAnswerRepository: InMemoryAnswerRepository;
+let inMemoryAnswersAttachmentsRepository: InMemoryAnswersAttachmentsRepository;
 let sut: EditAnswerUseCase;
 
 describe('Edit answer', () => {
   beforeEach(() => {
-    inMemoryAnswerRepository = new InMemoryAnswerRepository();
-    sut = new EditAnswerUseCase(inMemoryAnswerRepository);
+    inMemoryAnswersAttachmentsRepository = new InMemoryAnswersAttachmentsRepository();
+    inMemoryAnswerRepository = new InMemoryAnswerRepository(inMemoryAnswersAttachmentsRepository);
+    sut = new EditAnswerUseCase(inMemoryAnswerRepository, inMemoryAnswersAttachmentsRepository);
   });
 
   it('should be able to edit a answer', async () => {
@@ -22,6 +26,18 @@ describe('Edit answer', () => {
     }, new UniqueEntityId('question-1'));
 
     await inMemoryAnswerRepository.create(newAnswer);
+
+    inMemoryAnswersAttachmentsRepository.items.push(
+      makeAnswerAttachment({
+        answerId: newAnswer.id,
+        attachmentId: new UniqueEntityId('attachment-1'),
+      }),
+      makeAnswerAttachment({
+        answerId: newAnswer.id,
+        attachmentId: new UniqueEntityId('attachment-2'),
+      }),
+    )
+
 
     const result = await sut.execute({
       questionId: newAnswer.questionId.toValue(),
@@ -33,6 +49,13 @@ describe('Edit answer', () => {
     expect(result.value).toHaveProperty('answer.id');
     if (result.isRight()) {
       expect(result.value?.answer.content).toContain('Conteúdo da resposta editado');
+      if (result.value.answer.attachments) {
+        expect(result.value.answer.attachments.currentItems).toHaveLength(2);
+        expect(result.value.answer.attachments.currentItems).toEqual([
+          expect.objectContaining({attachmentId: new UniqueEntityId('attachment-1')}),
+          expect.objectContaining({attachmentId: new UniqueEntityId('attachment-3')})
+        ])
+      }
     }
   });
 

@@ -7,15 +7,21 @@ import {InMemoryAnswerRepository} from '@tests/repositories/in-memory-answer-rep
 import {makeAnswer} from '@tests/factories/make-answer.factory';
 import {Right} from "@/core/either";
 import {Answer, Question} from "@domain/forum/enterprise/entities";
+import {InMemoryAnswersAttachmentsRepository} from "@tests/repositories/in-memory-answers-attachments-repository";
+import {InMemoryQuestionsAttachmentsRepository} from "@tests/repositories/in-memory-questions-attachments-repository";
 
 let inMemoryQuestionsRepository: InMemoryQuestionsRepository;
+let inMemoryQuestionsAttachmentsRepository: InMemoryQuestionsAttachmentsRepository;
 let inMemoryAnswerRepository: InMemoryAnswerRepository;
+let inMemoryAnswersAttachmentsRepository: InMemoryAnswersAttachmentsRepository;
 let sut: ChooseBestAnswerUseCase;
 
 describe('Choose best answer for a question', () => {
   beforeEach(() => {
-    inMemoryQuestionsRepository = new InMemoryQuestionsRepository();
-    inMemoryAnswerRepository = new InMemoryAnswerRepository();
+    inMemoryAnswersAttachmentsRepository = new InMemoryAnswersAttachmentsRepository()
+    inMemoryQuestionsAttachmentsRepository = new InMemoryQuestionsAttachmentsRepository()
+    inMemoryQuestionsRepository = new InMemoryQuestionsRepository(inMemoryQuestionsAttachmentsRepository);
+    inMemoryAnswerRepository = new InMemoryAnswerRepository(inMemoryAnswersAttachmentsRepository);
     sut = new ChooseBestAnswerUseCase(inMemoryQuestionsRepository, inMemoryAnswerRepository);
   });
 

@@ -3,15 +3,18 @@ import {InMemoryAnswersCommentsRepository} from "@tests/repositories/in-memory-a
 import {CommentOnAnswerUseCase} from "@domain/forum/application/use-cases/comment-on-answer";
 import {makeAnswer} from "@tests/factories/make-answer.factory";
 import {InMemoryAnswerRepository} from "@tests/repositories/in-memory-answer-repository";
+import {InMemoryAnswersAttachmentsRepository} from "@tests/repositories/in-memory-answers-attachments-repository";
 
 let inMemoryAnswersCommentsRepository: InMemoryAnswersCommentsRepository;
+let inMemoryAnswersAttachmentsRepository: InMemoryAnswersAttachmentsRepository;
 let inMemoryAnswersRepository: InMemoryAnswerRepository;
 let sut: CommentOnAnswerUseCase;
 
 describe('Comment on Answer', () => {
   beforeEach(() => {
     inMemoryAnswersCommentsRepository = new InMemoryAnswersCommentsRepository();
-    inMemoryAnswersRepository = new InMemoryAnswerRepository();
+    inMemoryAnswersAttachmentsRepository = new InMemoryAnswersAttachmentsRepository();
+    inMemoryAnswersRepository = new InMemoryAnswerRepository(inMemoryAnswersAttachmentsRepository);
     sut = new CommentOnAnswerUseCase(inMemoryAnswersRepository, inMemoryAnswersCommentsRepository);
   });
 

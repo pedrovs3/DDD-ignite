@@ -4,6 +4,7 @@ import {DeleteQuestionUseCase} from '@domain/forum/application/use-cases/delete-
 import {expect} from 'vitest';
 import {UniqueEntityId} from '@/core/entities/unique-entity-id';
 import {InMemoryQuestionsAttachmentsRepository} from "@tests/repositories/in-memory-questions-attachments-repository";
+import {makeQuestionAttachment} from "@tests/factories/make-question-attachment";
 
 let inMemoryQuestionsRepository: InMemoryQuestionsRepository;
 let inMemoryQuestionAttachmentsRepository: InMemoryQuestionsAttachmentsRepository;
@@ -19,6 +20,17 @@ describe('Delete question based on ID', () => {
   it('should be able to delete a register based on his ID', async () => {
     const newQuestion = makeQuestion({authorId: new UniqueEntityId('author-1')}, new UniqueEntityId('question-1'));
     await inMemoryQuestionsRepository.create(newQuestion);
+
+    inMemoryQuestionAttachmentsRepository.items.push(
+      makeQuestionAttachment({
+        questionId: newQuestion.id,
+        attachmentId: new UniqueEntityId('attachment-1'),
+      }),
+      makeQuestionAttachment({
+        questionId: newQuestion.id,
+        attachmentId: new UniqueEntityId('attachment-2'),
+      }),
+    )
 
     const result = await sut.execute({
       questionId: 'question-1',
