@@ -1,4 +1,5 @@
 import dayjs from 'dayjs';
+import { QuestionAttachmentList } from '@domain/forum/enterprise/entities/question-attachment-list';
 import { Slug } from './value-objects/slug';
 import { UniqueEntityId } from '@/core/entities/unique-entity-id';
 import { Optional } from '@/core/types/optional';
@@ -6,7 +7,8 @@ import { AggregateRoot } from '@/core/entities/aggregate-root';
 
 export interface QuestionProps {
   authorId: UniqueEntityId;
-  bestAnswerId?: UniqueEntityId
+  bestAnswerId?: UniqueEntityId;
+  attachments?: QuestionAttachmentList;
   title: string;
   content: string;
   slug: Slug;
@@ -53,6 +55,14 @@ export class Question extends AggregateRoot<QuestionProps> {
     this.touch();
   }
 
+  get attachments(): QuestionAttachmentList | undefined {
+    return this.props.attachments;
+  }
+
+  set attachments(attachments: QuestionAttachmentList) {
+    this.props.attachments = attachments;
+  }
+
   get authorId(): UniqueEntityId {
     return this.props.authorId;
   }
@@ -69,7 +79,7 @@ export class Question extends AggregateRoot<QuestionProps> {
     return this.props.content.substring(0, 120).trim().concat('...');
   }
 
-  static create(props: Optional<QuestionProps, 'createdAt' | 'slug'>, id?: UniqueEntityId): Question {
+  static create(props: Optional<QuestionProps, 'createdAt' | 'slug' | 'attachments'>, id?: UniqueEntityId): Question {
     return new Question({
       ...props,
       slug: props.slug ?? Slug.createFromText(props.title),
