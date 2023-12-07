@@ -11,7 +11,9 @@ interface DeleteQuestionUseCaseRequest {
 type DeleteQuestionUseCaseResponse = Either<ResourceNotFoundError | Unauthorized, {}>;
 
 export class DeleteQuestionUseCase {
-  constructor(private questionsRepository: QuestionsRepository) {
+  constructor(
+    private questionsRepository: QuestionsRepository,
+  ) {
   }
 
   async execute({ authorId, questionId }: DeleteQuestionUseCaseRequest):

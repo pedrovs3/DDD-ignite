@@ -2,13 +2,16 @@ import {CreateQuestionUseCase} from '@domain/forum/application/use-cases/create-
 import {beforeEach, describe, expect} from 'vitest';
 import {InMemoryQuestionsRepository} from 'tests/repositories/in-memory-questions-repository';
 import {UniqueEntityId} from "@/core/entities";
+import {InMemoryQuestionsAttachmentsRepository} from "@tests/repositories/in-memory-questions-attachments-repository";
 
 let inMemoryQuestionsRepository: InMemoryQuestionsRepository;
+let inMemoryQuestionAttachmentsRepository: InMemoryQuestionsAttachmentsRepository;
 let sut: CreateQuestionUseCase;
 
 describe('Create question', () => {
   beforeEach(() => {
-    inMemoryQuestionsRepository = new InMemoryQuestionsRepository();
+    inMemoryQuestionAttachmentsRepository = new InMemoryQuestionsAttachmentsRepository();
+    inMemoryQuestionsRepository = new InMemoryQuestionsRepository(inMemoryQuestionAttachmentsRepository);
     sut = new CreateQuestionUseCase(inMemoryQuestionsRepository);
   });
 

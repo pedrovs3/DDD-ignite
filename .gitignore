@@ -13,3 +13,7 @@ build/
 # Dependencies
 lib/
 node_modules
+
+# Test files
+coverage/
+tests/results/

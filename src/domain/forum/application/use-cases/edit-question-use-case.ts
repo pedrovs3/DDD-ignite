@@ -44,10 +44,7 @@ export class EditQuestionUseCase {
 
     if (attachmentsIds) {
       const currentAttachments = await this.questionAttachmentsRepository
-        .findManyByQuestionId(questionId, {
-          page: 1,
-          limit: 100,
-        });
+        .findManyByQuestionId(questionId);
 
       const currentAttachmentsList = new QuestionAttachmentList(currentAttachments);
 

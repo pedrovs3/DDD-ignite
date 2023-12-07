@@ -3,3 +3,4 @@ export * from './answer.repository';
 export * from './question.repository';
 export * from './question-comments.repository';
 export * from './answer-comments.repository';
+export * from './question-attachments.repository';
