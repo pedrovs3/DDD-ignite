@@ -3,10 +3,10 @@ import {expect} from 'vitest';
 import {EditAnswerUseCase} from '@domain/forum/application/use-cases/edit-answer-use-case';
 import {UniqueEntityId} from '@/core/entities/unique-entity-id';
 import {makeAnswer} from '@tests/factories/make-answer.factory';
-import {Unauthorized} from "@domain/forum/application/use-cases/errors/unauthorized";
-import {ResourceNotFoundError} from "@domain/forum/application/use-cases/errors/resource-not-found.error";
 import {InMemoryAnswersAttachmentsRepository} from "@tests/repositories/in-memory-answers-attachments-repository";
 import {makeAnswerAttachment} from "@tests/factories/make-answer-attachment";
+import {Unauthorized} from "@/core/errors/errors/unauthorized";
+import {ResourceNotFoundError} from "@/core/errors/errors/resource-not-found.error";
 
 let inMemoryAnswerRepository: InMemoryAnswerRepository;
 let inMemoryAnswersAttachmentsRepository: InMemoryAnswersAttachmentsRepository;

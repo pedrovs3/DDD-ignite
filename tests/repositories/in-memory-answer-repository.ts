@@ -2,6 +2,7 @@ import { Answer } from '@domain/forum/enterprise/entities/answer';
 import { AnswerRepository } from '@domain/forum/application/repositories/answer.repository';
 import { AnswerAttachmentsRepository } from '@domain/forum/application/repositories/answer-attachments.repository';
 import { PaginationParams } from '@/core/repositories';
+import { DomainEvents } from '@/core/events/domain-events';
 
 export class InMemoryAnswerRepository implements AnswerRepository {
   public items: Answer[] = [];
@@ -11,6 +12,7 @@ export class InMemoryAnswerRepository implements AnswerRepository {
 
   async create(answer: Answer) {
     this.items.push(answer);
+    DomainEvents.dispatchEventsForAggregate(answer.id);
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -34,6 +36,7 @@ export class InMemoryAnswerRepository implements AnswerRepository {
     if (itemIndex === -1) return null;
 
     this.items[itemIndex] = answer;
+    DomainEvents.dispatchEventsForAggregate(answer.id);
 
     return answer;
   }
