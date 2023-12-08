@@ -1,6 +1,6 @@
 import {beforeEach, describe} from "vitest";
 import {InMemoryNotificationRepository} from "@tests/repositories/in-memory-notification-repository";
-import {SendNotificationUseCase} from "@domain/notification/application/use-cases/send-nofitication";
+import {SendNotificationUseCase} from "@domain/notification/application/use-cases/send-notification";
 
 let inMemoryNotificationRepository: InMemoryNotificationRepository;
 let sut: SendNotificationUseCase;

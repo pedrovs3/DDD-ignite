@@ -14,4 +14,16 @@ export class UniqueEntityId {
   toValue(): string {
     return this.value;
   }
+
+  equals(id?: UniqueEntityId): boolean {
+    if (id == null) {
+      return false;
+    }
+
+    if (this === id) {
+      return true;
+    }
+
+    return this.value === id.value;
+  }
 }
