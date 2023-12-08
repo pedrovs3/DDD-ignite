@@ -7,6 +7,7 @@ interface SendNotificationUseCaseRequest {
   receiverId: string;
   title: string;
   message: string;
+  link?: string | URL;
 }
 
 type SendNotificationUseCaseResponse = Either<null, {
@@ -21,11 +22,13 @@ export class SendNotificationUseCase {
     receiverId,
     title,
     message,
+    link,
   }: SendNotificationUseCaseRequest): Promise<SendNotificationUseCaseResponse> {
     const notification = Notification.create({
       receiverId: new UniqueEntityId(receiverId),
       title,
       message,
+      link,
     });
 
     await this.notificationRepository.create(notification);

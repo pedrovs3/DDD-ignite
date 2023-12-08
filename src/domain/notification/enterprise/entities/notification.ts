@@ -5,6 +5,7 @@ export interface NotificationProps {
   receiverId: UniqueEntityId;
   title: string;
   message: string;
+  link?: string | URL;
   readAt?: Date;
   createdAt: Date;
 }
@@ -30,7 +31,7 @@ export class Notification extends Entity<NotificationProps> {
     return this.props.receiverId;
   }
 
-  static create(props: Optional<NotificationProps, 'createdAt'>, id?: UniqueEntityId): Notification {
+  static create(props: Optional<NotificationProps, 'createdAt' | 'link'>, id?: UniqueEntityId): Notification {
     return new Notification({
       ...props,
       createdAt: props.createdAt ?? new Date(),
