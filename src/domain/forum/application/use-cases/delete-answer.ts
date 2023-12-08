@@ -1,8 +1,7 @@
-import { ResourceNotFoundError } from '@domain/forum/application/use-cases/errors/resource-not-found.error';
-import { Unauthorized } from '@domain/forum/application/use-cases/errors/unauthorized';
 import { AnswerRepository } from '@domain/forum/application/repositories';
-import { Answer } from '@domain/forum/enterprise/entities';
 import { Either, left, right } from '@/core/either';
+import { ResourceNotFoundError } from '@/core/errors/errors/resource-not-found.error';
+import { Unauthorized } from '@/core/errors/errors/unauthorized';
 
 interface DeleteAnswerUseCaseRequest {
   authorId: string;
