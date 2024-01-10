@@ -1,4 +1,4 @@
 export interface UseCaseError {
-  message: string;
-  fieldName?: string
+	message: string;
+	fieldName?: string;
 }

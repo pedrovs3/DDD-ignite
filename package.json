@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "lint": "eslint . --ext .ts",
-    "lint:fix": "eslint . --ext .ts --fix",
+    "biome:check": "pnpm dlx @biomejs/biome check --apply src",
     "start": "ts-node src/index.ts",
     "build": "tsc",
     "test": "vitest run",
@@ -19,6 +19,7 @@
   "author": "Pedro Vieira",
   "license": "MIT",
   "devDependencies": {
+    "@biomejs/biome": "1.5.0",
     "@faker-js/faker": "^8.2.0",
     "@types/node": "^20.9.0",
     "@typescript-eslint/eslint-plugin": "^6.10.0",

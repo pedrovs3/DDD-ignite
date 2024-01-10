@@ -1,1 +1,1 @@
-export * from './created-answer.event';
+export * from "./created-answer.event";

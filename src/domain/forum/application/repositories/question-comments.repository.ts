@@ -1,14 +1,17 @@
-import { QuestionComment } from '@domain/forum/enterprise/entities';
-import { PaginationParams } from '@/core/repositories';
+import { PaginationParams } from "@/core/repositories";
+import { QuestionComment } from "@domain/forum/enterprise/entities";
 
 export interface QuestionsCommentsRepository {
-  create(questionComment: QuestionComment): Promise<void>,
+	create(questionComment: QuestionComment): Promise<void>;
 
-  delete(questionComment: QuestionComment): Promise<void>,
+	delete(questionComment: QuestionComment): Promise<void>;
 
-  update(questionComment: QuestionComment): Promise<void>,
+	update(questionComment: QuestionComment): Promise<void>;
 
-  findById(id: string): Promise<QuestionComment | null>,
+	findById(id: string): Promise<QuestionComment | null>;
 
-  findAllByQuestionId(questionId: string, params: PaginationParams): Promise<QuestionComment[]>,
+	findAllByQuestionId(
+		questionId: string,
+		params: PaginationParams,
+	): Promise<QuestionComment[]>;
 }

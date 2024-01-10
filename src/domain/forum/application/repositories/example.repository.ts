@@ -1,5 +1,5 @@
-import { Example } from '@/domain/forum/enterprise/entities/example';
+import { Example } from "@/domain/forum/enterprise/entities/example";
 
 export interface ExampleRepository {
-  create: (example: Example) => Promise<void>;
+	create: (example: Example) => Promise<void>;
 }

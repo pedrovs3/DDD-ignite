@@ -1,36 +1,42 @@
-import { QuestionsCommentsRepository } from '@domain/forum/application/repositories';
-import { QuestionComment } from '@domain/forum/enterprise/entities';
-import { ResourceNotFoundError } from '@domain/forum/application/use-cases/errors/resource-not-found.error';
-import { Either, left, right } from '@/core/either';
+import { Either, left, right } from "@/core/either";
+import { QuestionsCommentsRepository } from "@domain/forum/application/repositories";
+import { ResourceNotFoundError } from "@domain/forum/application/use-cases/errors/resource-not-found.error";
+import { QuestionComment } from "@domain/forum/enterprise/entities";
 
 interface ListQuestionCommentsUseCaseRequest {
-  questionId: string;
-  page: number;
-  limit?: number;
+	questionId: string;
+	page: number;
+	limit?: number;
 }
 
-type ListQuestionCommentsUseCaseResponse = Either<ResourceNotFoundError, {
-  questionComments: QuestionComment[]
-}>;
+type ListQuestionCommentsUseCaseResponse = Either<
+	ResourceNotFoundError,
+	{
+		questionComments: QuestionComment[];
+	}
+>;
 
 export class ListQuestionCommentsUseCase {
-  constructor(private questionCommentsRepository: QuestionsCommentsRepository) {
-  }
+	constructor(
+		private questionCommentsRepository: QuestionsCommentsRepository,
+	) {}
 
-  async execute({
-    questionId,
-    page,
-    limit,
-  }: ListQuestionCommentsUseCaseRequest): Promise<ListQuestionCommentsUseCaseResponse> {
-    const questionComments = await this.questionCommentsRepository.findAllByQuestionId(questionId, {
-      page,
-      limit,
-    });
+	async execute({
+		questionId,
+		page,
+		limit,
+	}: ListQuestionCommentsUseCaseRequest): Promise<ListQuestionCommentsUseCaseResponse> {
+		const questionComments =
+			await this.questionCommentsRepository.findAllByQuestionId(questionId, {
+				page,
+				limit,
+			});
 
-    if (!questionComments) return left(new ResourceNotFoundError({ fieldName: 'questionComments' }));
+		if (!questionComments)
+			return left(new ResourceNotFoundError({ fieldName: "questionComments" }));
 
-    return right({
-      questionComments,
-    });
-  }
+		return right({
+			questionComments,
+		});
+	}
 }

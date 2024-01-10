@@ -1,29 +1,37 @@
-import { Question } from '@domain/forum/enterprise/entities';
-import { QuestionsRepository } from '@domain/forum/application/repositories';
-import { ResourceNotFoundError } from '@domain/forum/application/use-cases/errors/resource-not-found.error';
-import { Either, left, right } from '@/core/either';
+import { Either, left, right } from "@/core/either";
+import { QuestionsRepository } from "@domain/forum/application/repositories";
+import { ResourceNotFoundError } from "@domain/forum/application/use-cases/errors/resource-not-found.error";
+import { Question } from "@domain/forum/enterprise/entities";
 
 interface FetchRecentQuestionsUseCaseRequest {
-  page: number
-  limit?: number
+	page: number;
+	limit?: number;
 }
 
-type FetchRecentQuestionsUseCaseResponse = Either<ResourceNotFoundError, {
-  questions: Question[]
-}>;
+type FetchRecentQuestionsUseCaseResponse = Either<
+	ResourceNotFoundError,
+	{
+		questions: Question[];
+	}
+>;
 
 export class FetchRecentQuestionsUseCase {
-  constructor(private questionsRepository: QuestionsRepository) {
-  }
+	constructor(private questionsRepository: QuestionsRepository) {}
 
-  async execute({ page, limit }: FetchRecentQuestionsUseCaseRequest)
-    : Promise<FetchRecentQuestionsUseCaseResponse> {
-    const questions = await this.questionsRepository.findManyRecent({ page, limit });
+	async execute({
+		page,
+		limit,
+	}: FetchRecentQuestionsUseCaseRequest): Promise<FetchRecentQuestionsUseCaseResponse> {
+		const questions = await this.questionsRepository.findManyRecent({
+			page,
+			limit,
+		});
 
-    if (!questions) return left(new ResourceNotFoundError({ fieldName: 'questions' }));
+		if (!questions)
+			return left(new ResourceNotFoundError({ fieldName: "questions" }));
 
-    return right({
-      questions,
-    });
-  }
+		return right({
+			questions,
+		});
+	}
 }

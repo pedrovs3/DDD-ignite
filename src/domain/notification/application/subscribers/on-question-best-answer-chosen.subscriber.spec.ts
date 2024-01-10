@@ -1,14 +1,16 @@
-import { OnAnswerCreatedSubscriber } from "@domain/notification/application/subscribers/on-answer-created.subscriber";
-import { SendNotificationUseCase } from "@domain/notification/application/use-cases/send-notification";
-import { makeAnswer } from "@tests/factories/make-answer.factory";
-import { makeQuestion } from "@tests/factories/make-question.factory";
-import { InMemoryAnswerRepository } from "@tests/repositories/in-memory-answer-repository";
-import { InMemoryAnswersAttachmentsRepository } from "@tests/repositories/in-memory-answers-attachments-repository";
-import { InMemoryNotificationRepository } from "@tests/repositories/in-memory-notification-repository";
-import { InMemoryQuestionsAttachmentsRepository } from "@tests/repositories/in-memory-questions-attachments-repository";
-import { InMemoryQuestionsRepository } from "@tests/repositories/in-memory-questions-repository";
-import { waitFor } from "@tests/utils/wait-for";
-import { MockInstance, beforeEach, describe, expect } from "vitest";
+import {SendNotificationUseCase} from "@domain/notification/application/use-cases/send-notification";
+import {makeAnswer} from "@tests/factories/make-answer.factory";
+import {makeQuestion} from "@tests/factories/make-question.factory";
+import {InMemoryAnswerRepository} from "@tests/repositories/in-memory-answer-repository";
+import {InMemoryAnswersAttachmentsRepository} from "@tests/repositories/in-memory-answers-attachments-repository";
+import {InMemoryNotificationRepository} from "@tests/repositories/in-memory-notification-repository";
+import {InMemoryQuestionsAttachmentsRepository} from "@tests/repositories/in-memory-questions-attachments-repository";
+import {InMemoryQuestionsRepository} from "@tests/repositories/in-memory-questions-repository";
+import {waitFor} from "@tests/utils/wait-for";
+import {beforeEach, describe, expect, MockInstance} from "vitest";
+import {
+	OnQuestionBestAnswerChosenSubscriber
+} from "@domain/notification/application/subscribers/on-question-best-answer-chosen.subscriber";
 
 let inMemoryAnswerRepository: InMemoryAnswerRepository;
 let inMemoryAnswersAttachmentsRepository: InMemoryAnswersAttachmentsRepository;
@@ -25,7 +27,7 @@ let sendNotificationExecuteSpy: Required<SendNotificationUseCase>["execute"] ext
 	? MockInstance<A, R>
 	: never;
 
-describe("On Answer Created", () => {
+describe("On Answer choosed as the best", () => {
 	beforeEach(() => {
 		inMemoryAnswersAttachmentsRepository =
 			new InMemoryAnswersAttachmentsRepository();
@@ -44,13 +46,13 @@ describe("On Answer Created", () => {
 
 		sendNotificationExecuteSpy = vi.spyOn(sendNotificationUseCase, "execute");
 
-		new OnAnswerCreatedSubscriber(
-			inMemoryQuestionsRepository,
+		new OnQuestionBestAnswerChosenSubscriber(
+			inMemoryAnswerRepository,
 			sendNotificationUseCase,
 		);
 	});
 
-	it("should be able to send notification when an answer is created", async () => {
+	it("should be able to send notification when an answer is selected as the best", async () => {
 		const question = makeQuestion();
 		const answer = makeAnswer({
 			questionId: question.id,
@@ -59,6 +61,9 @@ describe("On Answer Created", () => {
 		await inMemoryQuestionsRepository.create(question);
 		await inMemoryAnswerRepository.create(answer);
 
+		question.bestAnswerId = answer.id;
+		await inMemoryQuestionsRepository.update(question);
+		
 		await waitFor(() => {
 			expect(sendNotificationExecuteSpy).toHaveBeenCalled();
 		});

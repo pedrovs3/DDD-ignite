@@ -1,20 +1,20 @@
-import { Entity } from '@/core/entities/entity';
-import { DomainEvent } from '@/core/events/domain-event';
-import { DomainEvents } from '@/core/events/domain-events';
+import { Entity } from "@/core/entities/entity";
+import { DomainEvent } from "@/core/events/domain-event";
+import { DomainEvents } from "@/core/events/domain-events";
 
 export abstract class AggregateRoot<Props> extends Entity<Props> {
-  private _domainEvents: DomainEvent[] = [];
+	private _domainEvents: DomainEvent[] = [];
 
-  get domainEvents(): DomainEvent[] {
-    return this._domainEvents;
-  }
+	get domainEvents(): DomainEvent[] {
+		return this._domainEvents;
+	}
 
-  public clearEvents(): void {
-    this._domainEvents = [];
-  }
+	public clearEvents(): void {
+		this._domainEvents = [];
+	}
 
-  protected addDomainEvent(domainEvent: DomainEvent): void {
-    this._domainEvents.push(domainEvent);
-    DomainEvents.markAggregateForDispatch(this);
-  }
+	protected addDomainEvent(domainEvent: DomainEvent): void {
+		this._domainEvents.push(domainEvent);
+		DomainEvents.markAggregateForDispatch(this);
+	}
 }

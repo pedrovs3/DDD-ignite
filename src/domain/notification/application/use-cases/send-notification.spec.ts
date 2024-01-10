@@ -1,6 +1,6 @@
-import {beforeEach, describe} from "vitest";
-import {InMemoryNotificationRepository} from "@tests/repositories/in-memory-notification-repository";
-import {SendNotificationUseCase} from "@domain/notification/application/use-cases/send-notification";
+import { SendNotificationUseCase } from "@domain/notification/application/use-cases/send-notification";
+import { InMemoryNotificationRepository } from "@tests/repositories/in-memory-notification-repository";
+import { beforeEach, describe } from "vitest";
 
 let inMemoryNotificationRepository: InMemoryNotificationRepository;
 let sut: SendNotificationUseCase;
@@ -9,7 +9,7 @@ describe("Send Notification", () => {
 	beforeEach(() => {
 		inMemoryNotificationRepository = new InMemoryNotificationRepository();
 		sut = new SendNotificationUseCase(inMemoryNotificationRepository);
-	})
+	});
 	it("should be able to send a notification", async () => {
 		const result = await sut.execute({
 			receiverId: "123",
@@ -20,7 +20,9 @@ describe("Send Notification", () => {
 		expect(result.isRight()).toBeTruthy();
 		expect(result.value).toHaveProperty("notification");
 		if (result.isRight()) {
-			expect(inMemoryNotificationRepository.items[0].id).toEqual(result.value.notification.id);
+			expect(inMemoryNotificationRepository.items[0].id).toEqual(
+				result.value.notification.id,
+			);
 		}
-	})
-})
+	});
+});
