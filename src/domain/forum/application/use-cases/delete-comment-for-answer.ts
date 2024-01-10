@@ -1,6 +1,6 @@
-import {Either, left, right} from "@/core/either";
-import {AnswerCommentsRepository} from "@domain/forum/application/repositories";
-import {ResourceNotFoundError, Unauthorized} from "@/core/errors/";
+import { Either, left, right } from "@/core/either";
+import { ResourceNotFoundError, Unauthorized } from "@/core/errors/";
+import { AnswerCommentsRepository } from "@domain/forum/application/repositories";
 
 interface DeleteCommentForAnswerUseCaseRequest {
 	answerId: string;

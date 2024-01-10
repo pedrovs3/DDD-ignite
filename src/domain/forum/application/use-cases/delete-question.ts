@@ -1,6 +1,6 @@
-import {Either, left, right} from "@/core/either";
-import {QuestionsRepository} from "@domain/forum/application/repositories/question.repository";
-import {ResourceNotFoundError, Unauthorized} from "@/core/errors";
+import { Either, left, right } from "@/core/either";
+import { ResourceNotFoundError, Unauthorized } from "@/core/errors";
+import { QuestionsRepository } from "@domain/forum/application/repositories/question.repository";
 
 interface DeleteQuestionUseCaseRequest {
 	authorId: string;

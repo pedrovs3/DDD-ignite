@@ -1,16 +1,14 @@
-import {SendNotificationUseCase} from "@domain/notification/application/use-cases/send-notification";
-import {makeAnswer} from "@tests/factories/make-answer.factory";
-import {makeQuestion} from "@tests/factories/make-question.factory";
-import {InMemoryAnswerRepository} from "@tests/repositories/in-memory-answer-repository";
-import {InMemoryAnswersAttachmentsRepository} from "@tests/repositories/in-memory-answers-attachments-repository";
-import {InMemoryNotificationRepository} from "@tests/repositories/in-memory-notification-repository";
-import {InMemoryQuestionsAttachmentsRepository} from "@tests/repositories/in-memory-questions-attachments-repository";
-import {InMemoryQuestionsRepository} from "@tests/repositories/in-memory-questions-repository";
-import {waitFor} from "@tests/utils/wait-for";
-import {beforeEach, describe, expect, MockInstance} from "vitest";
-import {
-	OnQuestionBestAnswerChosenSubscriber
-} from "@domain/notification/application/subscribers/on-question-best-answer-chosen.subscriber";
+import { OnQuestionBestAnswerChosenSubscriber } from "@domain/notification/application/subscribers/on-question-best-answer-chosen.subscriber";
+import { SendNotificationUseCase } from "@domain/notification/application/use-cases/send-notification";
+import { makeAnswer } from "@tests/factories/make-answer.factory";
+import { makeQuestion } from "@tests/factories/make-question.factory";
+import { InMemoryAnswerRepository } from "@tests/repositories/in-memory-answer-repository";
+import { InMemoryAnswersAttachmentsRepository } from "@tests/repositories/in-memory-answers-attachments-repository";
+import { InMemoryNotificationRepository } from "@tests/repositories/in-memory-notification-repository";
+import { InMemoryQuestionsAttachmentsRepository } from "@tests/repositories/in-memory-questions-attachments-repository";
+import { InMemoryQuestionsRepository } from "@tests/repositories/in-memory-questions-repository";
+import { waitFor } from "@tests/utils/wait-for";
+import { MockInstance, beforeEach, describe, expect } from "vitest";
 
 let inMemoryAnswerRepository: InMemoryAnswerRepository;
 let inMemoryAnswersAttachmentsRepository: InMemoryAnswersAttachmentsRepository;
@@ -63,7 +61,7 @@ describe("On Answer choosed as the best", () => {
 
 		question.bestAnswerId = answer.id;
 		await inMemoryQuestionsRepository.update(question);
-		
+
 		await waitFor(() => {
 			expect(sendNotificationExecuteSpy).toHaveBeenCalled();
 		});
